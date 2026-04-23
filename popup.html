@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      width: 280px;
+      background: #1e1e2e;
+      color: #cdd6f4;
+    }
+
+    header {
+      padding: 10px 14px;
+      background: #181825;
+      border-bottom: 1px solid #313244;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    #content {
+      padding: 8px 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+    }
+
+    .shortcut-row:hover {
+      background: #313244;
+    }
+
+    .keys {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      background: #45475a;
+      border: 1px solid #585b70;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #cba6f7;
+      white-space: nowrap;
+    }
+
+    .desc {
+      color: #bac2de;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .empty {
+      padding: 16px 14px;
+      color: #6c7086;
+      font-style: italic;
+    }
+
+    .url-note {
+      padding: 4px 14px 10px;
+      font-size: 11px;
+      color: #6c7086;
+      border-bottom: 1px solid #313244;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    footer {
+      border-top: 1px solid #313244;
+      padding: 8px 14px;
+    }
+
+    #manage-btn {
+      background: none;
+      border: none;
+      color: #7f849c;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    #manage-btn:hover { color: #cba6f7; }
+  </style>
+</head>
+<body>
+  <header>Page Shortcuts</header>
+  <div id="content">
+    <div class="empty">Loading…</div>
+  </div>
+  <footer>
+    <button id="manage-btn">Manage shortcuts…</button>
+  </footer>
+  <script src="popup.js"></script>
+</body>
+</html>

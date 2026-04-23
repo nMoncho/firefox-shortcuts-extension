@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page Shortcuts — Settings</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      padding: 32px;
+      min-height: 100vh;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #cba6f7;
+    }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    button {
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    #add-btn {
+      background: #313244;
+      color: #cdd6f4;
+      border-color: #45475a;
+    }
+    #add-btn:hover { background: #45475a; }
+
+    #save-btn {
+      background: #cba6f7;
+      color: #1e1e2e;
+    }
+    #save-btn:hover { background: #b4befe; }
+
+    #status {
+      font-size: 13px;
+      min-height: 20px;
+      margin-bottom: 16px;
+      color: #a6e3a1;
+    }
+    #status.error { color: #f38ba8; }
+
+    .card {
+      background: #181825;
+      border: 1px solid #313244;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 14px;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #6c7086;
+      font-size: 13px;
+      padding: 2px 6px;
+    }
+    .remove-btn:hover { color: #f38ba8; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .field-row:last-child { margin-bottom: 0; }
+
+    label {
+      color: #a6adc8;
+      font-size: 13px;
+      text-align: right;
+      padding-right: 8px;
+    }
+
+    input[type="text"], select {
+      background: #313244;
+      border: 1px solid #45475a;
+      border-radius: 6px;
+      color: #cdd6f4;
+      padding: 6px 10px;
+      font-size: 13px;
+      width: 100%;
+      outline: none;
+    }
+    input[type="text"]:focus, select:focus { border-color: #cba6f7; }
+
+    select option { background: #313244; }
+
+    .checkboxes {
+      display: flex;
+      gap: 18px;
+    }
+
+    .checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cdd6f4;
+      font-size: 13px;
+      text-align: left;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      accent-color: #cba6f7;
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .action-fields { margin-top: 0; }
+
+    #empty {
+      color: #6c7086;
+      font-style: italic;
+      padding: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Page Shortcuts</h1>
+    <div class="header-actions">
+      <button id="add-btn">+ Add Shortcut</button>
+      <button id="save-btn">Save</button>
+    </div>
+  </div>
+
+  <div id="status"></div>
+  <div id="shortcuts-list"></div>
+  <div id="empty" style="display:none">No shortcuts yet. Click "+ Add Shortcut" to create one.</div>
+
+  <script src="options.js"></script>
+</body>
+</html>

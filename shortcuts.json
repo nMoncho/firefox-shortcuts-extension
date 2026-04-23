@@ -1,0 +1,46 @@
+[
+  {
+    "id": "focus-search",
+    "description": "Focus the search input",
+    "url_pattern": "*://github.com/*",
+    "key": "/",
+    "modifiers": [],
+    "action": {
+      "type": "focus",
+      "selector": "input[name=q], input[type=search], #search-input"
+    }
+  },
+  {
+    "id": "click-new-issue",
+    "description": "Go to new issue page",
+    "url_pattern": "*://github.com/*/issues",
+    "key": "n",
+    "modifiers": [],
+    "action": {
+      "type": "click",
+      "selector": "a[href$='/issues/new/choose'], .btn-primary[href*='new']"
+    }
+  },
+  {
+    "id": "stash-merge",
+    "description": "Dispatch a custom event on the document body",
+    "url_pattern": "*://collaboration.msi.audi.com/stash/*",
+    "key": "m",
+    "modifiers": ["meta"],
+    "action": {
+      "type": "click",
+      "selector": "a[href$='/issues/new/choose'], .btn-primary[href*='new']"
+    }
+  },
+  {
+    "id": "navigate-home",
+    "description": "Go to homepage",
+    "url_pattern": "*://example.com/*",
+    "key": "h",
+    "modifiers": ["ctrl"],
+    "action": {
+      "type": "navigate",
+      "url": "https://example.com/"
+    }
+  }
+]
