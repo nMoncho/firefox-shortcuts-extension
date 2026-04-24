@@ -143,6 +143,55 @@
       font-style: italic;
       padding: 24px 0;
     }
+
+    .export-btn {
+      background: #313244;
+      color: #a6adc8;
+      border-color: #45475a;
+    }
+    .export-btn:hover { background: #45475a; color: #cdd6f4; }
+
+    #json-panel {
+      background: #181825;
+      border: 1px solid #313244;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .json-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: #313244;
+      font-size: 12px;
+      color: #a6adc8;
+      font-family: ui-monospace, monospace;
+    }
+
+    .json-panel-actions { display: flex; gap: 8px; }
+
+    .json-panel-actions button {
+      padding: 3px 10px;
+      font-size: 12px;
+      background: #45475a;
+      color: #cdd6f4;
+      border-color: #585b70;
+    }
+    .json-panel-actions button:hover { background: #585b70; }
+
+    #json-panel pre {
+      margin: 0;
+      padding: 16px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cdd6f4;
+      overflow-x: auto;
+      max-height: 420px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
@@ -150,6 +199,8 @@
     <h1>Page Shortcuts</h1>
     <div class="header-actions">
       <button id="add-btn">+ Add Shortcut</button>
+      <button id="download-btn" class="export-btn">⬇ Download JSON</button>
+      <button id="view-json-btn" class="export-btn">{ } View JSON</button>
       <button id="save-btn">Save</button>
     </div>
   </div>

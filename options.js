@@ -1,3 +1,6 @@
+import { escAttr } from './utils.js';
+import { loadShortcuts } from './storage.js';
+
 const list = document.getElementById('shortcuts-list');
 const empty = document.getElementById('empty');
 const status = document.getElementById('status');
@@ -7,6 +10,9 @@ document.getElementById('add-btn').addEventListener('click', () => {
   shortcuts.push(emptyShortcut());
   renderList();
 });
+
+document.getElementById('download-btn').addEventListener('click', downloadJson);
+document.getElementById('view-json-btn').addEventListener('click', toggleJsonView);
 
 document.getElementById('save-btn').addEventListener('click', async () => {
   const data = collectAll();
@@ -19,6 +25,7 @@ document.getElementById('save-btn').addEventListener('click', async () => {
 });
 
 let shortcuts = [];
+let jsonPanelEl = null;
 
 /** Loads shortcuts from storage and performs the initial render. */
 async function init() {
@@ -222,17 +229,71 @@ function emptyShortcut() {
 }
 
 /**
- * Reads shortcuts from storage. Falls back to shortcuts.json on first run
- * and seeds storage so subsequent reads come from storage.
- * @returns {Promise<object[]>}
+ * Serializes the current form state to JSON and triggers a browser file download.
+ * Reflects unsaved edits, not the last saved state in storage.
  */
-async function loadShortcuts() {
-  const result = await browser.storage.local.get('shortcuts');
-  if (result.shortcuts) return result.shortcuts;
-  const res = await fetch(browser.runtime.getURL('shortcuts.json'));
-  const defaults = await res.json();
-  await browser.storage.local.set({ shortcuts: defaults });
-  return defaults;
+function downloadJson() {
+  const json = JSON.stringify(collectAll(), null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'shortcuts.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Toggles an inline panel that displays the current form state as formatted JSON.
+ * Includes a Copy button for one-click clipboard access.
+ * Reflects unsaved edits, not the last saved state in storage.
+ */
+function toggleJsonView() {
+  const btn = document.getElementById('view-json-btn');
+
+  if (jsonPanelEl) {
+    jsonPanelEl.remove();
+    jsonPanelEl = null;
+    btn.textContent = '{ } View JSON';
+    return;
+  }
+
+  const json = JSON.stringify(collectAll(), null, 2);
+
+  jsonPanelEl = document.createElement('div');
+  jsonPanelEl.id = 'json-panel';
+
+  const header = document.createElement('div');
+  header.className = 'json-panel-header';
+
+  const filename = document.createElement('span');
+  filename.textContent = 'shortcuts.json';
+
+  const actions = document.createElement('div');
+  actions.className = 'json-panel-actions';
+
+  const copyBtn = document.createElement('button');
+  copyBtn.textContent = 'Copy';
+  copyBtn.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(json);
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕ Close';
+  closeBtn.addEventListener('click', toggleJsonView);
+
+  actions.append(copyBtn, closeBtn);
+  header.append(filename, actions);
+
+  const pre = document.createElement('pre');
+  pre.textContent = json;
+
+  jsonPanelEl.append(header, pre);
+  status.after(jsonPanelEl);
+
+  btn.textContent = '✕ Hide JSON';
 }
 
 /**
@@ -244,15 +305,6 @@ function showStatus(msg, isError) {
   status.textContent = msg;
   status.className = isError ? 'error' : '';
   setTimeout(() => { status.textContent = ''; }, 3000);
-}
-
-/**
- * Escapes a string for safe use as an HTML attribute value.
- * @param {string} str
- * @returns {string}
- */
-function escAttr(str) {
-  return String(str).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 init();

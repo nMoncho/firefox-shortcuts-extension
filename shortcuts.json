@@ -22,17 +22,6 @@
     }
   },
   {
-    "id": "stash-merge",
-    "description": "Dispatch a custom event on the document body",
-    "url_pattern": "*://collaboration.msi.audi.com/stash/*",
-    "key": "m",
-    "modifiers": ["meta"],
-    "action": {
-      "type": "click",
-      "selector": "a[href$='/issues/new/choose'], .btn-primary[href*='new']"
-    }
-  },
-  {
     "id": "navigate-home",
     "description": "Go to homepage",
     "url_pattern": "*://example.com/*",
