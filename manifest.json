@@ -3,6 +3,7 @@
   "name": "Page Shortcuts",
   "version": "1.0.0",
   "description": "Inject custom keyboard shortcuts into any webpage",
+  "license": "MIT",
   "permissions": [
     "activeTab",
     "tabs",
