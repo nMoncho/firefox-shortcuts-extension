@@ -8,11 +8,13 @@
  */
 export function matchesUrl(pattern, url) {
   if (!pattern || pattern === '<all_urls>') return true;
+
   const reStr = pattern
     .replace(/[.+^${}()|[\]\\]/g, '\\$&')
     .replace(/\*/g, '.*')
     .replace(/\?/g, '.');
-  return new RegExp('^' + reStr + '$').test(url);
+
+    return new RegExp('^' + reStr + '$').test(url);
 }
 
 /**
@@ -24,6 +26,7 @@ export function matchesUrl(pattern, url) {
  */
 export function matchesKeyEvent(shortcut, event) {
   const mods = shortcut.modifiers || [];
+
   return (
     event.key.toLowerCase() === shortcut.key.toLowerCase() &&
     event.ctrlKey  === mods.includes('ctrl')  &&
@@ -43,6 +46,7 @@ export function keyLabel(shortcut) {
   const SYMBOLS = { ctrl: '⌃', meta: '⌘', alt: '⌥', shift: '⇧' };
   const mods = (shortcut.modifiers ?? []).map(m => SYMBOLS[m] ?? m.toUpperCase());
   const key = shortcut.key.length === 1 ? shortcut.key.toUpperCase() : shortcut.key;
+
   return [...mods, key].join('');
 }
 

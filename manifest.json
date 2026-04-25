@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Page Shortcuts",
   "version": "1.0.0",
-  "description": "Inject custom keyboard shortcuts into any webpage via shortcuts.json",
+  "description": "Inject custom keyboard shortcuts into any webpage",
 
   "permissions": [
     "activeTab",
