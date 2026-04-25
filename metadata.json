@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "en-US": "Inject custom keyboard shortcuts into any webpage."
+  },
+  "categories": [
+    "other"
+  ],
+  "version": {
+    "license": "MIT"
+  }
+}
