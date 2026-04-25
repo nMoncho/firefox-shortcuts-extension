@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Page Shortcuts",
   "version": "1.0.0",
   "description": "Inject custom keyboard shortcuts into any webpage",
@@ -7,7 +7,10 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "storage",
+    "storage"
+  ],
+
+  "host_permissions": [
     "<all_urls>"
   ],
 
@@ -24,7 +27,7 @@
     "96": "icons/icon-96.svg"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "icons/icon-16.svg",
       "32": "icons/icon-32.svg"
@@ -38,5 +41,10 @@
     "open_in_tab": true
   },
 
-  "web_accessible_resources": ["shortcuts.json"]
+  "web_accessible_resources": [
+    {
+      "resources": ["shortcuts.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

@@ -27,6 +27,8 @@ The extension must be built before loading. Firefox loads from `dist/`, not the 
 **Build pipeline (`build.js`):**  
 esbuild bundles `content.js`, `popup.js`, and `options.js` into `dist/`. All imports are inlined; the `browser` global is left untouched (it is provided by Firefox at runtime). Static assets (`manifest.json`, `shortcuts.json`, HTML files, `icons/`) are copied to `dist/` verbatim on every build.
 
+This is a Manifest V3 extension. Host permissions (`<all_urls>`) live in `host_permissions`, not `permissions`. The toolbar button uses `action` (not `browser_action`). `web_accessible_resources` entries are objects with a `matches` field.
+
 **Shared modules:**
 - `utils.js` — pure functions with no browser API calls: `matchesUrl`, `matchesKeyEvent`, `keyLabel`, `escHtml`, `escAttr`. Imported by the entry points and directly by the test suite.
 - `storage.js` — exports `loadShortcuts()`, which reads from `browser.storage.local` and falls back to `shortcuts.json` on first run (seeding storage so subsequent reads come from storage).
