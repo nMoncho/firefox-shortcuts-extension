@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Page Shortcuts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Inject custom keyboard shortcuts into any webpage",
   "license": "MIT",
   "permissions": [
