@@ -3,7 +3,6 @@
   "name": "Page Shortcuts",
   "version": "1.0.0",
   "description": "Inject custom keyboard shortcuts into any webpage",
-
   "permissions": [
     "activeTab",
     "tabs",
@@ -34,6 +33,12 @@
     },
     "default_popup": "popup.html",
     "default_title": "Page Shortcuts"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{60ad6479-d9ff-43b5-9177-a9828fe236d9}"
+    }
   },
 
   "options_ui": {
