@@ -244,8 +244,9 @@ function downloadJson() {
 }
 
 /**
- * Toggles an inline panel that displays the current form state as formatted JSON.
- * Includes a Copy button for one-click clipboard access.
+ * Toggles an inline panel with an editable textarea showing the current form state as JSON.
+ * Copy reflects the current textarea content (including any edits).
+ * Apply parses the textarea content and rebuilds the shortcut cards.
  * Reflects unsaved edits, not the last saved state in storage.
  */
 function toggleJsonView() {
@@ -257,8 +258,6 @@ function toggleJsonView() {
     btn.textContent = '{ } View JSON';
     return;
   }
-
-  const json = JSON.stringify(collectAll(), null, 2);
 
   jsonPanelEl = document.createElement('div');
   jsonPanelEl.id = 'json-panel';
@@ -272,28 +271,56 @@ function toggleJsonView() {
   const actions = document.createElement('div');
   actions.className = 'json-panel-actions';
 
+  const textarea = document.createElement('textarea');
+  textarea.value = JSON.stringify(collectAll(), null, 2);
+  textarea.spellcheck = false;
+
   const copyBtn = document.createElement('button');
   copyBtn.textContent = 'Copy';
   copyBtn.addEventListener('click', async () => {
-    await navigator.clipboard.writeText(json);
+    await navigator.clipboard.writeText(textarea.value);
     copyBtn.textContent = 'Copied!';
     setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
   });
+
+  const applyBtn = document.createElement('button');
+  applyBtn.textContent = 'Apply';
+  applyBtn.addEventListener('click', () => applyJsonEdit(textarea));
 
   const closeBtn = document.createElement('button');
   closeBtn.textContent = '✕ Close';
   closeBtn.addEventListener('click', toggleJsonView);
 
-  actions.append(copyBtn, closeBtn);
+  actions.append(copyBtn, applyBtn, closeBtn);
   header.append(filename, actions);
 
-  const pre = document.createElement('pre');
-  pre.textContent = json;
-
-  jsonPanelEl.append(header, pre);
+  jsonPanelEl.append(header, textarea);
   status.after(jsonPanelEl);
 
   btn.textContent = '✕ Hide JSON';
+}
+
+/**
+ * Parses the JSON from the edit textarea, validates it is an array,
+ * then replaces the shortcut cards with the parsed content.
+ * Errors are surfaced via the status bar without closing the panel.
+ * @param {HTMLTextAreaElement} textarea
+ */
+function applyJsonEdit(textarea) {
+  let parsed;
+  try {
+    parsed = JSON.parse(textarea.value);
+  } catch (err) {
+    showStatus(`Invalid JSON — ${err.message}`, true);
+    return;
+  }
+  if (!Array.isArray(parsed)) {
+    showStatus('JSON must be an array of shortcut objects.', true);
+    return;
+  }
+  shortcuts = parsed;
+  renderList();
+  showStatus('Applied — click Save to persist.', false);
 }
 
 /**
