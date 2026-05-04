@@ -37,17 +37,38 @@ export function matchesKeyEvent(shortcut, event) {
 }
 
 /**
- * Builds a human-readable key label for a shortcut using Unicode modifier symbols.
+ * @typedef {{ ctrl: string, meta: string, alt: string, shift: string, sep: string }} ModifierSymbols
+ */
+
+/**
+ * Returns a platform-appropriate modifier symbols map.
+ * On macOS, Unicode glyphs are used and joined without a separator (e.g. "⌘K").
+ * On all other platforms, text labels are used joined with "+" (e.g. "Ctrl+K").
+ * @param {string} os - OS identifier from `browser.runtime.getPlatformInfo()` e.g. "mac", "win", "linux".
+ * @returns {ModifierSymbols}
+ */
+export function buildSymbols(os) {
+  if (os === 'mac') {
+    return { ctrl: '⌃', meta: '⌘', alt: '⌥', shift: '⇧', sep: '' };
+  } else if (os === 'win') {
+    return { ctrl: 'Ctrl', meta: '⊞ Win', alt: 'Alt', shift: 'Shift', sep: '+' };
+  }
+
+  return { ctrl: 'Ctrl', meta: 'Meta', alt: 'Alt', shift: 'Shift', sep: '+' };
+}
+
+/**
+ * Builds a human-readable key label for a shortcut using the provided modifier symbols.
  * Single-character keys are uppercased; named keys (e.g. "Enter") are kept as-is.
  * @param {object} shortcut - A shortcut entry from shortcuts.json.
- * @returns {string} e.g. "⌘K", "⌃⇧D", "/"
+ * @param {ModifierSymbols} symbols - Platform-specific symbols from `buildSymbols()`.
+ * @returns {string} e.g. "⌘K" on macOS, "Ctrl+K" on Windows/Linux.
  */
-export function keyLabel(shortcut) {
-  const SYMBOLS = { ctrl: '⌃', meta: '⌘', alt: '⌥', shift: '⇧' };
-  const mods = (shortcut.modifiers ?? []).map(m => SYMBOLS[m] ?? m.toUpperCase());
+export function keyLabel(shortcut, symbols) {
+  const mods = (shortcut.modifiers ?? []).map(m => symbols[m] ?? m.toUpperCase());
   const key = shortcut.key.length === 1 ? shortcut.key.toUpperCase() : shortcut.key;
 
-  return [...mods, key].join('');
+  return [...mods, key].join(symbols.sep);
 }
 
 /**

@@ -1,15 +1,21 @@
-import { matchesUrl, matchesKeyEvent, keyLabel } from './utils.js';
+import { matchesUrl, matchesKeyEvent, keyLabel, buildSymbols } from './utils.js';
 import { loadShortcuts } from './storage.js';
 
 (async () => {
   let shortcuts;
+  let symbols;
 
   console.log('Initializing shortcuts js');
 
   try {
-    shortcuts = await loadShortcuts();
+    const [loadedShortcuts, { os }] = await Promise.all([
+      loadShortcuts(),
+      browser.runtime.getPlatformInfo(),
+    ]);
+    shortcuts = loadedShortcuts;
+    symbols = buildSymbols(os);
   } catch (err) {
-    console.error('[Page Shortcuts] Failed to load shortcuts:', err);
+    console.error('[Page Shortcuts] Failed to initialize:', err);
     return;
   }
 
@@ -72,7 +78,7 @@ import { loadShortcuts } from './storage.js';
         const isVisible = rect.width > 0 || rect.height > 0;
 
         if (isVisible) {
-          const badge = makeBadge(keyLabel(shortcut));
+          const badge = makeBadge(keyLabel(shortcut, symbols));
           Object.assign(badge.style, {
             position: 'fixed',
             left: `${Math.round(rect.left + rect.width / 2)}px`,

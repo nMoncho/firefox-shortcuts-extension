@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { matchesUrl, matchesKeyEvent, keyLabel, escHtml, escAttr } from './utils.js';
+import { matchesUrl, matchesKeyEvent, keyLabel, buildSymbols, escHtml, escAttr } from './utils.js';
+
+const mac = buildSymbols('mac');
+const win = buildSymbols('win');
 
 // ---------------------------------------------------------------------------
 // matchesUrl
@@ -109,43 +112,68 @@ describe('matchesKeyEvent', () => {
 // keyLabel
 // ---------------------------------------------------------------------------
 
+describe('buildSymbols', () => {
+  it('returns Unicode glyph symbols for mac', () => {
+    expect(buildSymbols('mac')).toMatchObject({ ctrl: '⌃', meta: '⌘', alt: '⌥', shift: '⇧' });
+  });
+
+  it('uses an empty separator on mac', () => {
+    expect(buildSymbols('mac').sep).toBe('');
+  });
+
+  it('returns text labels for win', () => {
+    expect(buildSymbols('win')).toMatchObject({ ctrl: 'Ctrl', meta: '⊞ Win', alt: 'Alt', shift: 'Shift' });
+  });
+
+  it('returns text labels for linux', () => {
+    expect(buildSymbols('linux')).toMatchObject({ ctrl: 'Ctrl', meta: 'Meta', alt: 'Alt', shift: 'Shift' });
+  });
+
+  it('uses "+" as separator on non-mac platforms', () => {
+    expect(buildSymbols('win').sep).toBe('+');
+    expect(buildSymbols('linux').sep).toBe('+');
+  });
+});
+
 describe('keyLabel', () => {
   it('uppercases single-character keys', () => {
-    expect(keyLabel({ key: 'n', modifiers: [] })).toBe('N');
+    expect(keyLabel({ key: 'n', modifiers: [] }, mac)).toBe('N');
   });
 
   it('preserves named keys as-is', () => {
-    expect(keyLabel({ key: 'Enter', modifiers: [] })).toBe('Enter');
-    expect(keyLabel({ key: 'F2', modifiers: [] })).toBe('F2');
+    expect(keyLabel({ key: 'Enter', modifiers: [] }, mac)).toBe('Enter');
+    expect(keyLabel({ key: 'F2', modifiers: [] }, mac)).toBe('F2');
   });
 
   it('preserves punctuation keys unchanged', () => {
-    expect(keyLabel({ key: '/', modifiers: [] })).toBe('/');
+    expect(keyLabel({ key: '/', modifiers: [] }, mac)).toBe('/');
   });
 
-  it('renders ctrl as ⌃', () => {
-    expect(keyLabel({ key: 'k', modifiers: ['ctrl'] })).toBe('⌃K');
+  it('renders mac modifier glyphs without a separator', () => {
+    expect(keyLabel({ key: 'k', modifiers: ['ctrl'] },  mac)).toBe('⌃K');
+    expect(keyLabel({ key: 'k', modifiers: ['meta'] },  mac)).toBe('⌘K');
+    expect(keyLabel({ key: 'k', modifiers: ['alt'] },   mac)).toBe('⌥K');
+    expect(keyLabel({ key: 'k', modifiers: ['shift'] }, mac)).toBe('⇧K');
   });
 
-  it('renders meta as ⌘', () => {
-    expect(keyLabel({ key: 'k', modifiers: ['meta'] })).toBe('⌘K');
+  it('renders multiple mac modifiers in declaration order without a separator', () => {
+    expect(keyLabel({ key: 'd', modifiers: ['ctrl', 'shift'] }, mac)).toBe('⌃⇧D');
+    expect(keyLabel({ key: 's', modifiers: ['meta', 'shift'] }, mac)).toBe('⌘⇧S');
   });
 
-  it('renders alt as ⌥', () => {
-    expect(keyLabel({ key: 'k', modifiers: ['alt'] })).toBe('⌥K');
+  it('renders win modifier text labels joined with "+"', () => {
+    expect(keyLabel({ key: 'k', modifiers: ['ctrl'] },  win)).toBe('Ctrl+K');
+    expect(keyLabel({ key: 'k', modifiers: ['meta'] },  win)).toBe('⊞ Win+K');
+    expect(keyLabel({ key: 'k', modifiers: ['alt'] },   win)).toBe('Alt+K');
+    expect(keyLabel({ key: 'k', modifiers: ['shift'] }, win)).toBe('Shift+K');
   });
 
-  it('renders shift as ⇧', () => {
-    expect(keyLabel({ key: 'k', modifiers: ['shift'] })).toBe('⇧K');
-  });
-
-  it('renders multiple modifiers in declaration order', () => {
-    expect(keyLabel({ key: 'd', modifiers: ['ctrl', 'shift'] })).toBe('⌃⇧D');
-    expect(keyLabel({ key: 's', modifiers: ['meta', 'shift'] })).toBe('⌘⇧S');
+  it('renders multiple win modifiers joined with "+"', () => {
+    expect(keyLabel({ key: 'd', modifiers: ['ctrl', 'shift'] }, win)).toBe('Ctrl+Shift+D');
   });
 
   it('handles a missing modifiers array', () => {
-    expect(keyLabel({ key: 'x', modifiers: undefined })).toBe('X');
+    expect(keyLabel({ key: 'x', modifiers: undefined }, mac)).toBe('X');
   });
 });
 
