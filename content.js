@@ -13,6 +13,7 @@ import { loadShortcuts } from './storage.js';
     return;
   }
 
+  // Search shortcuts for this page, and return if non were defined
   const active = shortcuts.filter(s => matchesUrl(s.url_pattern, location.href));
 
   if (active.length === 0) return;
@@ -107,6 +108,7 @@ import { loadShortcuts } from './storage.js';
    */
   function makeBadge(label) {
     const el = document.createElement('div');
+
     Object.assign(el.style, {
       display: 'inline-flex',
       alignItems: 'center',
@@ -124,6 +126,7 @@ import { loadShortcuts } from './storage.js';
       letterSpacing: '0.03em',
     });
     el.textContent = label;
+
     return el;
   }
 
@@ -197,11 +200,13 @@ import { loadShortcuts } from './storage.js';
         el?.click();
         break;
       }
+
       case 'focus': {
         const el = document.querySelector(action.selector);
         el?.focus();
         break;
       }
+
       case 'dispatch': {
         const target = action.selector
           ? document.querySelector(action.selector)
@@ -213,10 +218,12 @@ import { loadShortcuts } from './storage.js';
         }));
         break;
       }
+
       case 'navigate': {
         window.location.href = action.url;
         break;
       }
+
       default:
         console.warn('[Page Shortcuts] Unknown action type:', action.type);
     }
